@@ -1,136 +1,128 @@
-# Code Samples for Title: Value vs Reference Types Deep Dive
+# Code Samples for Title: Video 7: Value vs Reference Types Deep Dive
 
 This file contains all code samples from the video.
 
-## Slide 4: Value Types in Memory
+## Slide 6: Assignment with Value Types
 
 ```csharp
-void MyMethod()
+int x = 10;
+int y = x;  // Copy the value
+
+Console.WriteLine($"x = {x}, y = {y}");  // x = 10, y = 10
+
+x = 20;  // Change x
+
+Console.WriteLine($"x = {x}, y = {y}");  // x = 20, y = 10
+// y is unchanged!
+```
+
+## Slide 7: Assignment with Reference Types: The Surprise
+
+```csharp
+var list1 = new List<int> { 1, 2, 3 };
+var list2 = list1;  // Copy the REFERENCE, not the list!
+
+Console.WriteLine($"list1 count: {list1.Count}");  // 3
+Console.WriteLine($"list2 count: {list2.Count}");  // 3
+
+list1.Add(4);  // Add to list1
+
+Console.WriteLine($"list1 count: {list1.Count}");  // 4
+Console.WriteLine($"list2 count: {list2.Count}");  // 4 (!)
+// list2 also has 4 items!
+```
+
+## Slide 9: Comparing Value and Reference Assignment
+
+### Topic 1: Value Types
+
+```csharp
+int a = 5;
+int b = a;  // Copy value
+
+a = 10;  // Change a
+
+// a = 10
+// b = 5 (unchanged)
+```
+
+### Topic 2: Reference Types
+
+```csharp
+var list1 = new List<int> { 5 };
+var list2 = list1;  // Copy reference
+
+list1[0] = 10;  // Change via list1
+
+// list1[0] = 10
+// list2[0] = 10 (also changed!)
+```
+
+## Slide 10: How to Actually Copy a List
+
+```csharp
+var list1 = new List<int> { 1, 2, 3 };
+
+// Create a NEW list with the same items
+var list2 = new List<int>(list1);
+// Or use LINQ
+var list3 = list1.ToList();
+
+list1.Add(4);
+
+Console.WriteLine($"list1: {list1.Count}");  // 4
+Console.WriteLine($"list2: {list2.Count}");  // 3
+Console.WriteLine($"list3: {list3.Count}");  // 3
+// list2 and list3 are separate copies!
+```
+
+## Slide 11: null: A Reference Type Thing
+
+```csharp
+// Reference types can be null
+string name = null;  // Valid
+List<int> numbers = null;  // Valid
+
+// Value types CANNOT be null (by default)
+int x = null;  // Compiler error!
+bool flag = null;  // Compiler error!
+
+// Unless you use nullable value types
+int? y = null;  // Valid with ?
+bool? flag2 = null;  // Valid with ?
+```
+
+## Slide 13: Method Parameters: Pass by Value
+
+```csharp
+void Increment(int x)
 {
-    int x = 42;      // On the stack
-    int y = x;       // Copies the value 42
-    y = 100;         // x is still 42
-    
-    // When MyMethod ends, x and y 
-    // are immediately removed from stack
+    x = x + 1;
+    Console.WriteLine($"Inside: x = {x}");
 }
+
+int number = 10;
+Increment(number);
+Console.WriteLine($"Outside: number = {number}");
+
+// Output:
+// Inside: x = 11
+// Outside: number = 10 (unchanged!)
 ```
 
-## Slide 5: Reference Types in Memory
+## Slide 14: Method Parameters: Reference Types
 
 ```csharp
-void MyMethod()
+void AddItem(List<int> list)
 {
-    string name = "Ben";     // "Ben" on heap, reference on stack
-    string alias = name;     // Copies the reference
-    
-    Person p = new Person(); // Person object on heap
-                            // p (the reference) on stack
-}
-```
-
-## Slide 6: The Assignment Gotcha
-
-### Topic 1: Value Type Assignment
-
-```csharp
-struct Point { public int X, Y; }
-
-Point p1 = new Point { X = 5, Y = 10 };
-Point p2 = p1;  // Copies entire struct
-p2.X = 20;
-
-// p1.X is still 5
-// p2.X is 20
-```
-
-### Topic 2: Reference Type Assignment
-
-```csharp
-class Person { public string Name; }
-
-Person p1 = new Person { Name = "Ben" };
-Person p2 = p1;  // Copies reference only!
-p2.Name = "Sarah";
-
-// p1.Name is now "Sarah" too!
-// Both point to same object
-```
-
-## Slide 7: Passing to Methods
-
-### Topic 1: Value Parameter
-
-```csharp
-void DoubleIt(int num)
-{
-    num = num * 2;  // Only changes local copy
+    list.Add(999);
 }
 
-int x = 5;
-DoubleIt(x);
-// x is still 5
-```
+var myList = new List<int> { 1, 2, 3 };
+AddItem(myList);
+Console.WriteLine($"Count: {myList.Count}");
 
-### Topic 2: Reference Parameter
-
-```csharp
-void ChangeName(Person p)
-{
-    p.Name = "Changed";  // Changes the object!
-}
-
-Person person = new Person { Name = "Ben" };
-ChangeName(person);
-// person.Name is now "Changed"
-```
-
-## Slide 8: The 'ref' Keyword
-
-```csharp
-void DoubleIt(ref int num)
-{
-    num = num * 2;  // Now changes the original!
-}
-
-int x = 5;
-DoubleIt(ref x);  // Note: ref here too
-// x is now 10
-
-// Works with reference types too
-void CreateNew(ref Person p)
-{
-    p = new Person();  // Changes what p points to
-}
-```
-
-## Slide 11: The String Exception
-
-```csharp
-string s1 = "Hello";
-string s2 = s1;
-s2 = "World";  // Creates NEW string object
-
-// s1 is still "Hello"
-// s2 is "World"
-
-// Even though string is reference type,
-// it acts like value type due to immutability
-```
-
-## Slide 12: Boxing and Unboxing
-
-```csharp
-int value = 42;              // Value type on stack
-object boxed = value;        // Boxing - copies to heap
-int unboxed = (int)boxed;    // Unboxing - copies back
-
-// Boxing is expensive! Avoid in loops
-ArrayList list = new ArrayList();
-for(int i = 0; i < 1000; i++)
-{
-    list.Add(i);  // Boxes every int!
-}
-// Use List<int> instead
+// Output: Count: 4
+// The method DID modify myList!
 ```
 
