@@ -1,6 +1,6 @@
-# Code Samples for Title: Tasks - Modern Multithreading
+# Code Samples, Tables, and Diagrams for: Tasks - Modern Multithreading
 
-This file contains all code samples from the video.
+This file contains code samples, tables, and diagrams from the video.
 
 ## Slide 3: Thread vs Task Creation
 
@@ -69,6 +69,16 @@ Task<int> task = Task.Run(() =>
 int result = await task;  // Get the computed value
 Console.WriteLine($"Sum: {result}");
 ```
+
+## Slide 6: Waiting for Tasks
+
+| Method | Blocks Thread? | When to Use |
+| :--- | :--- | :--- |
+| await task | No ✅ | Always prefer this in async methods |
+| task.Wait() | Yes ⚠️ | Only in Main() or top-level code |
+| task.Result | Yes ⚠️ | Same as Wait(), blocks until done |
+| Task.WaitAll() | Yes ⚠️ | Wait for multiple tasks (blocking) |
+| Task.WhenAll() | No ✅ | Await multiple tasks (non-blocking) |
 
 ## Slide 7: Running Multiple Tasks
 

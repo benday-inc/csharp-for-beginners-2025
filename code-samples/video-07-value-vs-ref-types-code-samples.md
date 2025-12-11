@@ -1,6 +1,21 @@
-# Code Samples for Title: Video 7: Value vs Reference Types Deep Dive
+# Code Samples, Tables, and Diagrams for: Video 7: Value vs Reference Types Deep Dive
 
-This file contains all code samples from the video.
+This file contains code samples, tables, and diagrams from the video.
+
+## Slide 5: Stack vs Heap Visualized
+
+```mermaid
+graph TB
+  subgraph Stack
+    A[x = 42]
+    C[y = 42]
+    D[name → addr1]
+    F[name2 → addr1]
+  end
+  subgraph Heap
+    E[addr1: 'Alice']
+  end
+```
 
 ## Slide 6: Assignment with Value Types
 

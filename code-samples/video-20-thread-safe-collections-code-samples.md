@@ -1,6 +1,6 @@
-# Code Samples for Title: Thread-Safe Collections
+# Code Samples, Tables, and Diagrams for: Thread-Safe Collections
 
-This file contains all code samples from the video.
+This file contains code samples, tables, and diagrams from the video.
 
 ## Slide 3: List<T> Under Pressure
 
@@ -16,6 +16,16 @@ Console.WriteLine($"Count: {list.Count}");
 // Expected: 10,000
 // Actual: 9,847 (or worse, an exception!)
 ```
+
+## Slide 4: The Concurrent Collection Family
+
+| Collection | Thread-Safe Version Of | Best For |
+| :--- | :--- | :--- |
+| ConcurrentDictionary<K,V> | Dictionary<K,V> | Shared caches, lookups |
+| ConcurrentBag<T> | List<T> (unordered) | Producer pools, work items |
+| ConcurrentQueue<T> | Queue<T> | FIFO processing, messages |
+| ConcurrentStack<T> | Stack<T> | LIFO processing, undo |
+| BlockingCollection<T> | N/A (wrapper) | Producer-consumer patterns |
 
 ## Slide 5: ConcurrentDictionary Basics
 
